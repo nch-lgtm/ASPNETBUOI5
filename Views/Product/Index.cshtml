@@ -1,0 +1,103 @@
+﻿@model IEnumerable<bai3.Models.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+
+    <form asp-action="Index" method="get" class="d-flex w-50">
+       
+        <input type="hidden" name="sortOrder" value="@ViewData["CurrentSort"]" />
+
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]"
+               class="form-control me-2" placeholder="Tìm theo tên, mô tả..." />
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+        <a asp-action="Index" class="btn btn-link">Clear</a>
+    </form>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                <a asp-action="Index" 
+               asp-route-sortOrder="@ViewData["NameSortParm"]" 
+               asp-route-searchString="@ViewData["CurrentFilter"]"
+               asp-route-page="@ViewData["Page"]"></a>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                <a asp-action="Index" 
+               asp-route-sortOrder="@ViewData["PriceSortParm"]" 
+               asp-route-searchString="@ViewData["CurrentFilter"]"
+               asp-route-page="@ViewData["Page"]"></a>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+<tfoot>
+    <tr>
+        <td colspan="3">
+            @{
+                int pages = (int)(ViewData["Pages"] ?? 1);
+                int p = (int)(ViewData["Page"] ?? 1);
+            }
+            <form asp-action="Index" method="get" class="d-inline-flex align-items-center gap-2">
+               
+                <input type="hidden" name="searchString" value="@ViewData["CurrentFilter"]" />
+                <input type="hidden" name="sortOrder" value="@ViewData["CurrentSort"]" />
+
+                <input type="submit" value="Go to" class="btn btn-sm btn-secondary" />
+                <span>page</span>
+                <input type="number" name="page" value="@p" min="1" max="@pages" class="form-control form-control-sm" style="width: 70px;" />
+                <span>of @pages</span>
+            </form>
+        </td>
+        <td colspan="2" class="text-end align-middle">
+            <strong>Tổng số: @ViewData["TotalItems"] sản phẩm (Hiển thị: @Model.Count())</strong>
+        </td>
+    </tr>
+</tfoot>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id= item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
